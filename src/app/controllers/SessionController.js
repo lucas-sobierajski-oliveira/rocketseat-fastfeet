@@ -10,7 +10,7 @@ class SessionController {
       email: Yup.string()
         .email()
         .required(),
-      password: Yup.String().required(),
+      password: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
