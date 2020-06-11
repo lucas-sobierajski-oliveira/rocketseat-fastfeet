@@ -1,16 +1,43 @@
 import * as Yup from 'yup';
 import { parseISO, format } from 'date-fns';
+import { Op } from 'sequelize';
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 import Notification from '../schemas/Notification';
+import File from '../models/File';
 
 import NewDeliveryMail from '../jobs/NewDeliveryMail';
 import Queue from '../../lib/Queue';
 
 class DeliveryController {
+  async show(req, res) {
+    const delivery = await Delivery.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        { model: Deliveryman, as: 'deliveryman' },
+        { model: Recipient, as: 'recipient' },
+      ],
+    });
+    return res.json(delivery);
+  }
+
   async index(req, res) {
-    const allDelivery = await Delivery.findAll();
+    const allDelivery = await Delivery.findAll({
+      where: {
+        product: req.query.like
+          ? { [Op.iLike]: `%${req.query.like}%` }
+          : { [Op.regexp]: '.+' },
+      },
+      include: [
+        { model: Deliveryman, as: 'deliveryman' },
+        { model: Recipient, as: 'recipient' },
+        { model: File, as: 'signature' },
+      ],
+      order: ['id'],
+    });
 
     return res.json(allDelivery);
   }
