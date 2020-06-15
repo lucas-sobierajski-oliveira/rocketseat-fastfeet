@@ -3,6 +3,11 @@ import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
+  async show(req, res) {
+    const recipient = await Recipient.findByPk(req.params.id);
+    return res.json(recipient);
+  }
+
   async index(req, res) {
     const search = await Recipient.findAll({
       where: {

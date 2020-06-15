@@ -3,6 +3,11 @@ import { Op } from 'sequelize';
 import Deliveryman from '../models/Deliveryman';
 
 class DeliverymanController {
+  async show(req, res) {
+    const deliveryman = await Deliveryman.findByPk(req.params.id);
+    return res.json(deliveryman);
+  }
+
   async index(req, res) {
     const allDeliveryman = await Deliveryman.findAll({
       where: {
