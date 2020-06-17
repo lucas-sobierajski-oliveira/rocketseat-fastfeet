@@ -64,6 +64,7 @@ routes.delete(
   DistributorProblemController.delete
 );
 routes.get('/problems', DistributorProblemController.index);
+routes.delete('/problems/:id', DeliveryProblemController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
